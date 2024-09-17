@@ -1,0 +1,57 @@
+name: Pull and Push Docker image to ECR on Tag
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'   # Trigger on semantic version tags like v1.0.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up AWS CLI with your credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Initialize Terraform
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.0.0
+
+      - name: Terraform Init
+        run: terraform init
+
+      # Apply Terraform and capture the ECR URL output
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply -auto-approve
+
+      - name: Get ECR URL from Terraform Output
+        id: ecr_output
+        run: echo "ECR_URL=$(terraform output -raw ecr_repository_url)" >> $GITHUB_ENV
+
+      # Log in to Amazon ECR using the Terraform output
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }}
+
+      # Pull Docker image from Docker Hub
+      - name: Pull Docker image from Docker Hub
+        run: docker pull spik3r/websitecounter:${{ github.ref_name }}
+
+      # Tag the Docker image with the Git tag
+      - name: Tag the Docker image with Git tag
+        run: docker tag spik3r/websitecounter:${{ github.ref_name }} ${{ env.ECR_URL }}:${{ github.ref_name }}
+
+      # Push the Docker image to AWS ECR using the Git tag
+      - name: Push Docker image to Amazon ECR
+        run: docker push ${{ env.ECR_URL }}:${{ github.ref_name }}
