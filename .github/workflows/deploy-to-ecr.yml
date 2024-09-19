@@ -34,11 +34,11 @@ jobs:
       # Terraform plan only sS bucket and Dynamo DB Table
       - name: Terraform Paln
         id: plan
-        run: terraform plan -target=alexis-tf-state -target=alexis-ddb
+        run: terraform plan -target=aws_s3_bucket.terraform_state -target=aws_dynamodb_table.terraform_locks
       # Apply Terraform and capture the ECR URL output
       - name: Terraform Apply
         id: apply
-        run: terraform apply -target=alexis-tf-state -target=alexis-ddb -auto-approve
+        run: terraform apply -target=aws_s3_bucket.terraform_state -target=aws_dynamodb_table.terraform_locks -auto-approve
       
       # Terraform plan only ECR
       - name: Terraform Paln
