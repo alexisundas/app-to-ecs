@@ -27,7 +27,7 @@ jobs:
           terraform_version: 1.3.0
 
       - name: Terraform Destroy
-      - run: terraform destroy
+        run: terraform destroy
       - name: Terraform Init
         run: terraform init
       
