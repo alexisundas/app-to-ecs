@@ -31,23 +31,14 @@ jobs:
       - name: Terraform Init
         run: terraform init
       
-      # Terraform plan only sS bucket and Dynamo DB Table
+      # Terraform plan 
       - name: Terraform Paln
         id: plan
-        run: terraform plan -target=aws_s3_bucket.terraform_state -target=aws_dynamodb_table.terraform_locks
-      # Apply Terraform and capture the ECR URL output
+        run: terraform plan 
+      # Apply Terraform
       - name: Terraform Apply
         id: apply
-        run: terraform apply -target=aws_s3_bucket.terraform_state -target=aws_dynamodb_table.terraform_locks -auto-approve
-      
-      # Terraform plan only ECR
-      - name: Terraform Paln
-        id: plan2
-        run: terraform plan -target=aws_ecr_repository.counting_app
-      # Apply Terraform 
-      - name: Terraform Apply
-        id: apply2
-        run: terraform apply -target=aws_ecr_repository.counting_app  -auto-approve
+        run: terraform apply 
 
 
   
