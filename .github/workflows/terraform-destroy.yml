@@ -27,7 +27,7 @@ jobs:
           terraform_version: 1.0.0
 
       - name: Initialize Terraform
-        run: terraform init
+        run: terraform init -backend-config="alexis-tf-state" -backend-config="./terraform.tfstate" -backend-config="eu-central-1"
 
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
