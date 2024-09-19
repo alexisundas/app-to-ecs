@@ -4,6 +4,14 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.67.0"
     }
+  backend "s3" {
+    bucket = "alexis-tf-state"
+    key = "./terraform.tfstate"
+    region = "eu-central-1"
+    dynamodb_table = "alexis-ddb"
+    encrypt = true
+  }
+}
   }
 }
 
