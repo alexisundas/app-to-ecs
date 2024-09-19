@@ -43,11 +43,11 @@ jobs:
       # Terraform plan only ECR
       - name: Terraform Paln
         id: plan2
-        run: terraform plan -target=counting-app
+        run: terraform plan -target=aws_ecr_repository.counting_app
       # Apply Terraform 
       - name: Terraform Apply
         id: apply2
-        run: terraform apply -target=counting-app  -auto-approve
+        run: terraform apply -target=aws_ecr_repository.counting_app  -auto-approve
 
 
   
