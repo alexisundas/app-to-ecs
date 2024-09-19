@@ -30,12 +30,27 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-
+      
+      # Terraform plan only sS bucket and Dynamo DB Table
+      - name: Terraform Paln
+        id: plan
+        run: terraform plan -target=alexis-tf-state -target=alexis-ddb
       # Apply Terraform and capture the ECR URL output
       - name: Terraform Apply
         id: apply
-        run: terraform apply -auto-approve
+        run: terraform apply -target=alexis-tf-state -target=alexis-ddb -auto-approve
+      
+      # Terraform plan only ECR
+      - name: Terraform Paln
+        id: plan2
+        run: terraform plan -target=counting-app
+      # Apply Terraform 
+      - name: Terraform Apply
+        id: apply2
+        run: terraform apply -target=counting-app  -auto-approve
 
+
+  
       - name: Get ECR URL from Terraform Output
         id: ecr_output
         run: echo "ECR_URL=$(terraform output -raw ecr_repository_url)" >> $GITHUB_ENV
