@@ -4,14 +4,17 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.67.0"
     }
-    backend "s3" {
-      bucket = "alexis-tf-state"
-      key = "./terraform.tfstate"
-      region = "eu-central-1"
-      dynamodb_table = "alexis-ddb"
-      encrypt = true
-      }
-   }
+  }
+}
+
+terraform {
+  backend "s3" {
+    bucket = "alexis-tf-state"
+    key = "./terraform.tfstate"
+    region = "eu-central-1"
+    dynamodb_table = "alexis-ddb"
+    encrypt = true
+  }
 }
 
 module "alexis_tf_state" {
@@ -24,3 +27,4 @@ module "ecr_repo" {
   source = "./modules/ecr"
   ecr_repo_name = local.ecr_repo_name
 }
+
