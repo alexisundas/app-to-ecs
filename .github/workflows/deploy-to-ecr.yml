@@ -38,9 +38,7 @@ jobs:
       # Apply Terraform
       - name: Terraform Apply
         id: apply
-        run: terraform apply 
-
-
+        run: terraform apply -auto-approve
   
       - name: Get ECR URL from Terraform Output
         id: ecr_output
